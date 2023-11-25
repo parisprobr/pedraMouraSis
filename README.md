@@ -1,3 +1,33 @@
+# Sistema Distribuído: Arquitetura e Implementação
+
+## Arquitetura do Sistema
+
+O sistema adota uma arquitetura **cliente-servidor**. Os clientes, como navegadores web ou aplicações que consomem a API, interagem com o servidor, que é uma aplicação PHP executada em containers Docker. Esta arquitetura é marcada pela comunicação direta entre os clientes e o servidor, com o servidor processando e respondendo às solicitações dos clientes.
+
+## Marshaling e Unmarshaling de Dados
+
+O framework **Laravel** é utilizado para o marshaling e unmarshaling de dados. Ao receber requisições HTTP:
+
+- **Unmarshaling**: O Laravel converte automaticamente dados JSON em arrays PHP ou objetos de requisição.
+- **Marshaling**: Ao enviar respostas, o Laravel transforma arrays ou objetos PHP de volta para JSON, cuidando dos cabeçalhos de resposta HTTP apropriados.
+
+## Paradigma de Comunicação
+
+A comunicação se baseia na **invocação remota**, operando através do protocolo requisição-resposta HTTP. A API, desenvolvida com Laravel, atende a solicitações HTTP, processando-as e retornando dados em formato JSON.
+
+## Cache Distribuído com Redis
+
+Um aspecto importante é o uso de `Cache::remember` do Laravel integrado ao **Redis**. O Redis funciona como um sistema de cache distribuído, armazenando índices que são acessíveis e compartilhados entre os dois nós da API (`apibcb1` e `apibcb2`). Isso permite:
+
+- Compartilhamento eficiente de informações de cache entre os nós.
+- Gerenciamento de acessos concorrentes e condições de corrida.
+- Melhoria de desempenho ao reduzir leituras e escritas repetitivas no banco de dados.
+
+## Conclusão
+
+A estrutura da aplicação, incluindo o uso eficiente do Laravel para o processamento de dados e do Redis para cache distribuído, é bem adaptada às necessidades de um sistema distribuído. Esta abordagem facilita a eficiência operacional, reforça a consistência dos dados e melhora o desempenho em um ambiente distribuído.
+
+
 # Escolha um diretório
 cd Documentos;<BR>
 mkdir pos
