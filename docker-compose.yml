@@ -1,0 +1,15 @@
+version: '2.4'
+
+services:
+
+    pedraMoura-nginx-proxy:
+        image: jwilder/nginx-proxy
+        container_name: pedraMoura-nginx-proxy
+        restart: on-failure
+        privileged: true
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+        mem_limit: 128M
