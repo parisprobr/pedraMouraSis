@@ -28,6 +28,13 @@ Um aspecto importante é o uso de `Cache::remember` do Laravel integrado ao **Re
 A estrutura da aplicação, incluindo o uso eficiente do Laravel para o processamento de dados e do Redis para cache distribuído, é bem adaptada às necessidades de um sistema distribuído. Esta abordagem facilita a eficiência operacional, reforça a consistência dos dados e melhora o desempenho em um ambiente distribuído.
 
 
+
+# AMBIENTE LOCAL
+
+# Mapeie em seu host local:
+127.0.0.1 site.pedramoura.local api.apibcb.local 
+
+
 # Escolha um diretório
 cd Documentos;<BR>
 mkdir pos

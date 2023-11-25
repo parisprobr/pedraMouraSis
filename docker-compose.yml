@@ -13,3 +13,14 @@ services:
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
         mem_limit: 128M
+    
+    site2:
+        image: httpd:2.4
+        container_name: site2
+        environment:
+            - VIRTUAL_HOST=site.pedramoura.local
+        hostname: site.pedramoura.local
+        depends_on:
+            - pedraMoura-nginx-proxy
+        volumes:
+            - ./site/html:/usr/local/apache2/htdocs
