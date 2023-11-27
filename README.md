@@ -2,32 +2,39 @@
 
 ## Arquitetura do Sistema
 
-O sistema adota uma arquitetura **cliente-servidor**. Os clientes, como navegadores web ou aplicações que consomem a API, interagem com o servidor, que é uma aplicação PHP executada em containers Docker. Esta arquitetura é marcada pela comunicação direta entre os clientes e o servidor, com o servidor processando e respondendo às solicitações dos clientes.
+Este sistema adota uma **arquitetura cliente-servidor**, composta por várias aplicações interconectadas e um balanceamento de carga eficiente.
+
+### Componentes do Sistema
+
+1. **API Laravel (`apibcb1` e `apibcb2`)**: Dois nós de uma aplicação Laravel, atendendo às requisições e processando os dados. Ambos compartilham um sistema de cache Redis centralizado.
+
+2. **Sites (`site1` e `site2`)**: Dois nós de um servidor web Apache, configurados com o mesmo `VIRTUAL_HOST`, facilitando o balanceamento de carga entre eles.
+
+3. **Banco de Dados MySQL e phpMyAdmin**: Um servidor MySQL para armazenamento de dados e phpMyAdmin para administração do banco de dados.
 
 ## Marshaling e Unmarshaling de Dados
 
-O framework **Laravel** é utilizado para o marshaling e unmarshaling de dados. Ao receber requisições HTTP:
-
-- **Unmarshaling**: O Laravel converte automaticamente dados JSON em arrays PHP ou objetos de requisição.
-- **Marshaling**: Ao enviar respostas, o Laravel transforma arrays ou objetos PHP de volta para JSON, cuidando dos cabeçalhos de resposta HTTP apropriados.
+O **Laravel** gerencia o marshaling e unmarshaling de dados, convertendo automaticamente requisições HTTP JSON em arrays ou objetos PHP, e vice-versa para as respostas.
 
 ## Paradigma de Comunicação
 
-A comunicação se baseia na **invocação remota**, operando através do protocolo requisição-resposta HTTP. A API, desenvolvida com Laravel, atende a solicitações HTTP, processando-as e retornando dados em formato JSON.
+Utiliza-se a **invocação remota** via protocolo requisição-resposta HTTP. A API Laravel processa solicitações e retorna dados em formato JSON, típico em APIs RESTful.
 
 ## Cache Distribuído com Redis
 
-Um aspecto importante é o uso de `Cache::remember` do Laravel integrado ao **Redis**. O Redis funciona como um sistema de cache distribuído, armazenando índices que são acessíveis e compartilhados entre os dois nós da API (`apibcb1` e `apibcb2`). Isso permite:
+A aplicação utiliza `Cache::remember` do Laravel integrado a um sistema de cache **Redis centralizado**, compartilhado entre os nós `apibcb1` e `apibcb2`, garantindo eficiência e consistência no acesso aos dados.
 
-- Compartilhamento eficiente de informações de cache entre os nós.
-- Gerenciamento de acessos concorrentes e condições de corrida.
-- Melhoria de desempenho ao reduzir leituras e escritas repetitivas no banco de dados.
+## Balanceamento de Carga com Nginx-Proxy
+
+O balanceamento de carga é gerenciado pelo **nginx-proxy**, distribuindo o tráfego de forma eficaz entre os nós da API e os servidores web Apache, otimizando a disponibilidade e a resiliência.
+
+## Banco de Dados e Administração
+
+O **MySQL** é utilizado para o armazenamento de dados, enquanto o **phpMyAdmin** proporciona uma interface web para a administração do banco de dados.
 
 ## Conclusão
 
-A estrutura da aplicação, incluindo o uso eficiente do Laravel para o processamento de dados e do Redis para cache distribuído, é bem adaptada às necessidades de um sistema distribuído. Esta abordagem facilita a eficiência operacional, reforça a consistência dos dados e melhora o desempenho em um ambiente distribuído.
-
-
+Esta configuração do sistema distribuído, incluindo Laravel, Redis, Apache, MySQL, phpMyAdmin e nginx-proxy, cria uma arquitetura robusta e bem adaptada às necessidades de um sistema distribuído. A estrutura promove eficiência operacional, consistência de dados, resiliência e performance em um ambiente distribuído.
 
 # AMBIENTE LOCAL
 
@@ -47,7 +54,7 @@ git clone git@github.com:parisprobr/apibcb.git
 docker-compose up -d
 
 # Acesse as aplicações
-http://api.bcb.local
+http://api.apibcb.local
 
 # Funcionamento
 ## 1) API com dois nós: 
@@ -62,7 +69,5 @@ Acesso2: http://api.bcb.local (node2: IP:172.22.0.56)
 ```
 nginx.1     | api.apibcb.local 172.22.0.1 - - [25/Nov/2023:08:46:51 +0000] "GET / HTTP/1.1" 200 7124 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" "172.22.0.6:80"
 ```
-
-## 2) Acessos dos dois nodes ao mesmos Indices do Redis:
 
 
